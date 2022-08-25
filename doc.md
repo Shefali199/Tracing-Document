@@ -105,7 +105,7 @@ Let’s look at perf tool usage and options now that we successfully built lt. T
 
 ###### perf stat
 
-The **perf stat** command generates a report of various hardware and software events. It does so with the help of hardware counter registers found in modern CPUs that keep the count of these activities. The following image shows “./perf stat” run on “cal” command.
+The **perf stat** command generates a report of various hardware and software events. It does so with the help of hardware counter registers found in modern CPUs that keep the count of these activities. The following image shows `./perf stat` run on `cal` command.
 
 ![./perf stat cal output](images/perf-stat-cal.png)
 
