@@ -305,7 +305,7 @@ The following table shows you the system calls, frequency and the Linux subsyste
 #### Conclusion
 We hope this document has been informative and will help you as a guide on how to gather fine grained information on your workloads using **strace**.
 
-###### References:
+#### References:
 https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/monitoring_and_managing_system_status_and_performance/index
 https://copyfuture.com/blogs-details/20200102142905879jux966gmbab6shz
 https://manpages.ubuntu.com/manpages/trusty/man1/paxtest.1.html
