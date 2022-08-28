@@ -49,17 +49,17 @@ As mentioned earlier, strace which is a useful diagnostic, instructional, and de
 
 In addition, strace can generate run-time statistics on time, calls, and errors for each system call and  report  a  summary  on  program exit, suppressing the regular output.  This attempts to show system time (CPU time  spent running  in the kernel) independent of wall clock time. We plan to use these features to get information on workload system usage. Let’s get started with a few **strace** example runs of basic, verbose, and stats modes. We are going to use the “-c” option for gathering fine grained information. Let’s first look at a few examples on how to use “strace”.
 
-###### Usage: `strace <command we want to trace>`
+##### Usage: `strace <command we want to trace>`
 The following image shows `strace ls` output which shows system usage by “ls” command as it uses Linux System Calls to find and list information about the FILEs that reside under a directory.
 
 ![strace ls output](images/strace-ls.png)
 
-###### Verbose mode usage: `strace -v <command>`
+##### Verbose mode usage: `strace -v <command>`
 strace command when run in verbose mode gives more detailed information about the system calls. The following image shows `strace -v ifconfig` output.
 
 ![strace -v ifconfig output](images/strace-ifconfig.png)
 
-###### Gather statistics
+##### Gather statistics
 We can use the -c parameter to generate a report of the percentage of time spent in each system call, the total time in seconds, the microseconds per call, the total number of calls, the count of each system call that has failed with an error and the type of system call made - `strace -c <command>`. The following image shows `strace -c date` output that includes a summary of system usage statistics for “date” command.
 
 ![strace -c date output](images/strace-date.png)
@@ -97,32 +97,32 @@ The following image shows the “make perf” output:
 
 ![make perf output](images/perf-make.png)
 
-###### How to use the perf command?
+##### How to use the perf command?
 
 Let’s look at perf tool usage and options now that we successfully built lt. The following image shows the perf command usage and options.
 
 ![./perf -h output](images/perf-h.png)
 
-###### perf stat
+##### perf stat
 
 The **perf stat** command generates a report of various hardware and software events. It does so with the help of hardware counter registers found in modern CPUs that keep the count of these activities. The following image shows `./perf stat` run on `cal` command.
 
 ![./perf stat cal output](images/perf-stat-cal.png)
 
-###### Perf bench
+##### Perf bench
 
 The **perf bench** command contains multiple multithreaded microkernel benchmarks for executing different subsystems in the Linux kernel and system calls. This allows us to easily measure the impact of changes, which can help mitigate performance regressions. It also acts as a common benchmarking framework, enabling developers to easily create test cases, integrate transparently, and use performance-rich tooling subsystems. The following image shows `./perf bench all` output
 
 ![./perf bench all output](images/perf-bench-all.png)
 
-###### Tracing perf bench all workload
+##### Tracing perf bench all workload
 
 Now let’s run it under strace to see which system calls it is making:
 - `strace -c ./perf bench all`
   
 ![strace perf bench all output](images/strace-perf-bench-all.png)
 
-###### System Calls made by the workload:
+##### System Calls made by the workload:
 The following table shows you the system calls, frequency and the Linux subsystem they fall under with links to their corresponding system call entry points with link to the Linux kernel repository.
 
 | System Call | Frequency | Linux Subsystem | System Call Entry Point (API) |
@@ -203,7 +203,7 @@ Using strace to collect the trace for netdev stressor. The following image shows
 
 ![system calls made by netdev stressor](images/strace-netdev-stressor.png)
 
-###### System Calls made by the workload:
+##### System Calls made by the workload:
 
 The following table shows you the system calls, frequency and the Linux subsystem they fall under with links to their corresponding system call entry points with link to the Linux kernel repository.
 
@@ -269,7 +269,7 @@ Using strace to collect the trace when we run paxtest under kiddie mode. The fol
 
 ![paxtest under strace](images/strace-paxtest.png)
 
-###### System Calls made by the workload:
+##### System Calls made by the workload:
 The following table shows you the system calls, frequency and the Linux subsystem they fall under with links to their corresponding system call entry points with link to the Linux kernel repository.
 
 | System Call | Frequency | Linux Subsystem | System Call Entry Point (API) |
