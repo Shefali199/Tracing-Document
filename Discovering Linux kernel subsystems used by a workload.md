@@ -58,17 +58,17 @@ In addition, strace can generate run-time statistics on time, calls, and errors 
 ##### Usage: `strace <command we want to trace>`
 The following image shows `strace ls` output which shows system usage by “ls” command as it uses Linux System Calls to find and list information about the FILEs that reside under a directory.
 
-![strace ls output](images/strace-ls.png)
+![strace ls output](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/strace-ls.png)
 
 ##### Verbose mode usage: `strace -v <command>`
 strace command when run in verbose mode gives more detailed information about the system calls. The following image shows `strace -v ifconfig` output.
 
-![strace -v ifconfig output](images/strace-ifconfig.png)
+![strace -v ifconfig output](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/strace-ifconfig.png)
 
 ##### Gather statistics
 We can use the -c parameter to generate a report of the percentage of time spent in each system call, the total time in seconds, the microseconds per call, the total number of calls, the count of each system call that has failed with an error and the type of system call made - `strace -c <command>`. The following image shows `strace -c date` output that includes a summary of system usage statistics for “date” command.
 
-![strace -c date output](images/strace-date.png)
+![strace -c date output](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/strace-date.png)
 
 #### What is cscope and how do we use it?
 Now let’s look at **cscope**, a command line tool for browsing C, C++ or Java codebases. We can use it to find all the references to a symbol, global definitions, functions called by a function, functions calling a function, text strings, regular expression patterns, files including a file.
@@ -82,11 +82,11 @@ First let’s checkout the latest Linux repository and build cscope database:
   
 Note: Run **cscope -R** to build the database (run it only once) and **cscope -d -p10** to enter into the interactive mode of cscope. To get out of this mode press **ctrl+d**.
 
-![cscope -R output](images/cscope-R.png)
+![cscope -R output](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/cscope-R.png)
 
 All the system calls are defined in the kernel using the SYSCALL_DEFINE[0-6] macro in their respective subsystem directory. We can search for this egrep pattern to find all the system calls and their subsystems (Press the Tab key to go back to the cscope options). 
 
-![system call subsystem info](images/egrep-pattern.png)
+![system call subsystem info](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/egrep-pattern.png)
 
 #### Perf
 
@@ -103,32 +103,32 @@ If you haven't already checkout the Linux mainline repository, you can do so and
   
 The following image shows the “make perf” output:
 
-![make perf output](images/perf-make.png)
+![make perf output](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/perf-make.png)
 
 ##### How to use the perf command?
 
 Let’s look at perf tool usage and options now that we successfully built lt. The following image shows the perf command usage and options.
 
-![./perf -h output](images/perf-h.png)
+![./perf -h output](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/perf-h.png)
 
 ##### perf stat
 
 The **perf stat** command generates a report of various hardware and software events. It does so with the help of hardware counter registers found in modern CPUs that keep the count of these activities. The following image shows `./perf stat` run on `cal` command.
 
-![./perf stat cal output](images/perf-stat-cal.png)
+![./perf stat cal output](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/perf-stat-cal.png)
 
 ##### Perf bench
 
 The **perf bench** command contains multiple multithreaded microkernel benchmarks for executing different subsystems in the Linux kernel and system calls. This allows us to easily measure the impact of changes, which can help mitigate performance regressions. It also acts as a common benchmarking framework, enabling developers to easily create test cases, integrate transparently, and use performance-rich tooling subsystems. The following image shows `./perf bench all` output
 
-![./perf bench all output](images/perf-bench-all.png)
+![./perf bench all output](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/perf-bench-all.png)
 
 ##### Tracing perf bench all workload
 
 Now let’s run it under strace to see which system calls it is making:
 - `strace -c ./perf bench all`
   
-![strace perf bench all output](images/strace-perf-bench-all.png)
+![strace perf bench all output](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/strace-perf-bench-all.png)
 
 ##### System Calls made by the workload:
 The following table shows you the system calls, frequency and the Linux subsystem they fall under with links to their corresponding system call entry points with link to the Linux kernel repository.
@@ -193,23 +193,23 @@ stress-ng is used for performing stress testing on the kernel. It allows you to 
 
 Running the netdev stressor (It starts N  workers  that  exercise  various  netdevice ioctl commands across all the available network devices. The ioctls exercised by this stressor are  as  follows: SIOCGIFCONF,  SIOCGIFINDEX, SIOCGIFNAME, SIOCGIFFLAGS, SIOCGIFADDR, SIOCGIFNETMASK, SIOCGIFMETRIC,  SIOCGIFMTU,  SIOCGIFHWADDR,  SIOCGIFMAP  and   SIOCGIFTXQLEN) using the `stress-ng --netdev 1 -t 60 --metrics` command.
 
-![stress-ng --netdev 1 -t 60 --metrics output](images/stress-ng-netdev.png)
+![stress-ng --netdev 1 -t 60 --metrics output](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/stress-ng-netdev.png)
 
 We can use the perf record command to record the events and information associated with a process. This command records the profiling data in the perf.data file in the same directory. Lets record the events associated with the netdev stressor using the `./perf record stress-ng --netdev 1 -t 60 --metrics` command.
 
-![perf record stress-ng ntdev output](images/perf-record-netdev.png)
+![perf record stress-ng ntdev output](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/perf-record-netdev.png)
 
 To view the final report use the perf report command. This command helps us to read the perf.data file. The following image shows the output of the `./perf report` command and the events associated with the netdev stressor. 
 
-![perf report for netdev events](images/perf-report-netdev-events.png)
+![perf report for netdev events](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/perf-report-netdev-events.png)
 
 We can also use perf annotate to see the statistics of each instruction of the program. The following image shows the output of the `./perf annotate` command. 
 
-![perf annotate output](images/perf-annotate.png)
+![perf annotate output](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/perf-annotate.png)
 
 Using strace to collect the trace for netdev stressor. The following image shows the output of the  `strace -c  stress-ng --netdev 1 -t 60 --metrics` command.
 
-![system calls made by netdev stressor](images/strace-netdev-stressor.png)
+![system calls made by netdev stressor](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/strace-netdev-stressor.png)
 
 ##### System Calls made by the workload:
 
@@ -263,19 +263,19 @@ paxtest is a program that tests buffer overflows in the kernel. It tests kernel 
 
 Running paxtest under the kiddie mode - `paxtest kiddie`
 
-![paxtest under kiddie mode](images/paxtest-kiddie.png)
+![paxtest under kiddie mode](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/paxtest-kiddie.png)
 
 Collecting CPU stack traces for the paxtest kiddie command to see which function is calling other functions in the performance profile, using the DWARF method to unwind the stack. The following image shows the output of `./perf record --call-graph dwarf paxtest kiddie` command. 
 
-![perf record paxtest kiddie](images/perf-record-paxtest.png)
+![perf record paxtest kiddie](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/perf-record-paxtest.png)
 
 Reading the perf.data file. The following image shows the output of the `./perf report --stdio` command in the call-graph format. The stdio parameter shows the output in text format.
 
-![paxtest events report](images/perf-report-paxtest-events.png)
+![paxtest events report](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/perf-report-paxtest-events.png)
 
 Using strace to collect the trace when we run paxtest under kiddie mode. The following image shows the output of the `strace -c paxtest kiddie` command.
 
-![paxtest under strace](images/strace-paxtest.png)
+![paxtest under strace](Discovering_Linux_kernel_subsystems_used_by_a_workload_images/strace-paxtest.png)
 
 ##### System Calls made by the workload:
 The following table shows you the system calls, frequency and the Linux subsystem they fall under with links to their corresponding system call entry points with link to the Linux kernel repository.
