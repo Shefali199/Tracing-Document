@@ -1,7 +1,11 @@
 ## Discovering Linux kernel subsystems used by a workload
+#### Authors: 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Shuah Khan <<skhan@linuxfoundation.org>> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shefali Sharma <<sshefali021@gmail.com>>**
+
 #### Key Points
 - Understanding system resources necessary to build and run a workload is important.
-- Linux tracing and strace can be used to discover the system resources in use by a workload.
+- Linux tracing and strace can be used to discover the system resources in use by a workload. The completeness of the system usage information depends on the completeness of coverage of a workload.
 - Performance and security of the operating system can be analyzed with the help of tools like perf, stress-ng, paxtest.
 - Once we discover and understand the workload needs, we can focus on them to avoid regressions and use it to evaluate safety considerations.
 
@@ -10,6 +14,8 @@ In our previous blog [Discovery Linux Kernel Subsystems used by OpenAPS](https:/
 Continuing on our work, we identified a process for gathering fine grained information about system resources necessary to run a workload on Linux. This process can then be applied to any workload including individual OpenAPS commands and important use-cases. As an example, what subsystems are used when a user queries the insulin pump status. 
 
 We chose an easily available [strace](https://man7.org/linux/man-pages/man1/strace.1.html) which is a useful diagnostic, instructional, and debugging tool and can be used to discover the system resources in use by a workload. Once we discover and understand the workload needs, we can focus on them to avoid regressions and use it to evaluate safety considerations.
+
+This method of tracing tells us the system calls invoked by the workload and doesn't include all the system calls that can be invoked. In addition to that this trace tells us just the code paths within these system calls that are invoked. As an example, if a workload opens a file and reads from it successfully, then the success path is the one that is traced. Any error paths in that system call will not be traced. If there is a workload that provides full coverage the method outlined here will trace and find all possible code paths. The completeness of the system usage information depends on the completeness of coverage of a workload.
 
 #### How did we gather fine grained system information?
 
@@ -92,6 +98,8 @@ If you haven't already checkout the Linux mainline repository, you can do so and
 - `make -j3 all`
 - `cd tools/perf`
 - `make`
+
+**Note:** The perf command can be built without building the kernel in the repo and can be run on older kernels. However matching the kernel and perf revisions gives more accurate information on the subsystem usage.
   
 The following image shows the “make perf” output:
 
@@ -181,7 +189,7 @@ The following table shows you the system calls, frequency and the Linux subsyste
 
 
 #### stress-ng
-stress-ng is used for performing stress testing on the kernel. It allows you to exercise various physical subsystems of the computer, as well as interfaces of the OS kernel, using "stressors". They are available for CPU, CPU cache, devices, I/O, interrupts, file system, memory, network, operating system, pipelines, schedulers, virtual machines. You may find the description of all the available stressors [here](https://www.mankier.com/1/stress-ng).
+stress-ng is used for performing stress testing on the kernel. It allows you to exercise various physical subsystems of the computer, as well as interfaces of the OS kernel, using **stressors**. They are available for CPU, CPU cache, devices, I/O, interrupts, file system, memory, network, operating system, pipelines, schedulers, virtual machines. You may find the description of all the available stressors [here](https://www.mankier.com/1/stress-ng).
 
 Running the netdev stressor (It starts N  workers  that  exercise  various  netdevice ioctl commands across all the available network devices. The ioctls exercised by this stressor are  as  follows: SIOCGIFCONF,  SIOCGIFINDEX, SIOCGIFNAME, SIOCGIFFLAGS, SIOCGIFADDR, SIOCGIFNETMASK, SIOCGIFMETRIC,  SIOCGIFMTU,  SIOCGIFHWADDR,  SIOCGIFMAP  and   SIOCGIFTXQLEN) using the `stress-ng --netdev 1 -t 60 --metrics` command.
 
@@ -309,7 +317,7 @@ We hope this document has been informative and will help you as a guide on how t
 https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/monitoring_and_managing_system_status_and_performance/index
 https://copyfuture.com/blogs-details/20200102142905879jux966gmbab6shz
 https://manpages.ubuntu.com/manpages/trusty/man1/paxtest.1.html
-https://www.mankier.com/1/stress-ng
+https://www.mankier.com/1/stress-ng <br>
 https://habr.com/en/company/flant/blog/477994/
 
 #### SPDX-License-Identifier: CC-BY-4.0
